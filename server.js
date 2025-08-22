@@ -1,49 +1,31 @@
-const express = require('express');
-const app = express();
+const http = require('http');
 const port = process.env.PORT || 3000;
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-app.get('/', (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>AGI Staffers Admin</title>
-      <style>
-        body {
-          font-family: system-ui, -apple-system, sans-serif;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
-          margin: 0;
-          background: #f3f4f6;
-        }
-        .container {
-          text-align: center;
-          padding: 2rem;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        h1 { color: #1f2937; }
-        p { color: #6b7280; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
+const server = http.createServer((req, res) => {
+  console.log(`Received request: ${req.method} ${req.url} from ${req.headers.host}`);
+  
+  if (req.url === '/api/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }));
+  } else {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>AGI Staffers Admin</title>
+      </head>
+      <body>
         <h1>AGI Staffers Admin Dashboard</h1>
-        <p>Welcome to the admin dashboard</p>
         <p>Server is running on port ${port}</p>
-      </div>
-    </body>
-    </html>
-  `);
+        <p>Host: ${req.headers.host}</p>
+        <p>Time: ${new Date().toISOString()}</p>
+      </body>
+      </html>
+    `);
+  }
 });
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running at http://0.0.0.0:${port}`);
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Server listening on 0.0.0.0:${port}`);
 });
