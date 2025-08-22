@@ -1,5 +1,5 @@
 const http = require('http');
-const port = process.env.PORT || 3000;
+const port = 3000; // Force port 3000 to match container configuration
 
 const server = http.createServer((req, res) => {
   console.log(`Received request: ${req.method} ${req.url} from ${req.headers.host}`);

@@ -1,5 +1,8 @@
 [phases.setup]
 nixPkgs = ["nodejs-18_x"]
 
+[variables]
+PORT = "3000"
+
 [start]
 cmd = "node server.js"
